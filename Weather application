@@ -1,0 +1,39 @@
+import requests
+
+API_KEY = 'f46f38298203719b4a4b0375f9bf6cf9'  # Replace with your real OpenWeatherMap API key
+
+def get_weather(city):
+    base_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+    print(f"Requesting: {base_url.replace(API_KEY, 'API_KEY_HIDDEN')}")  # Print URL without exposing API key
+    try:
+        response = requests.get(base_url)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response Content: {response.text}")
+
+        if response.status_code == 200:
+            data = response.json()
+            main = data['main']
+            weather = data['weather'][0]
+            temperature = main['temp']
+            humidity = main['humidity']
+            description = weather['description']
+            
+            print(f"Weather in {city}:")
+            print(f"Temperature: {temperature}°C")
+            print(f"Humidity: {humidity}%")
+            print(f"Condition: {description.capitalize()}")
+        else:
+            print(f"Error: {response.text}")
+            print("City not found. Please try again.")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
+def main():
+    while True:
+        city = input("Enter city name (or type 'exit' to quit): ")
+        if city.lower() == 'exit':
+            break
+        get_weather(city)
+
+if __name__ == "__main__":
+    main()
